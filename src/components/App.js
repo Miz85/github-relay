@@ -1,11 +1,11 @@
-import React from 'react';
-import Relay from 'react-relay';
+import React, { Component } from 'react';
+import Relay, { createContainer } from 'react-relay';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import TextField from 'material-ui/TextField';
+import { grey200, grey800 } from 'material-ui/styles/colors';
 import Repository from './Repository';
 import UserProfile from './UserProfile';
-import { grey200, grey800 } from 'material-ui/styles/colors';
 
 const styles = {
   appBar: {
@@ -21,11 +21,16 @@ const styles = {
   container: {
     width: '90%',
     margin: '0 auto',
-    marginTop: '100px'
+    marginTop: '120px'
+  },
+  repositoryList: {
+    listStyle: 'none',
+    margin: '0px',
+    padding: '0px'
   }
 };
 
-class App extends React.Component {
+class App extends Component {
   render() {
     const { viewer } = this.props;
     return (
@@ -38,7 +43,7 @@ class App extends React.Component {
             iconElementRight={<UserProfile user={viewer}/>}/>
           <div style={styles.container}>
             <h1>Your repositories</h1>
-            <ul>
+            <ul style={styles.repositoryList}>
               {viewer.repositories.edges.map(({node}) =>
                 <li key={node.id}>
                   <Repository repository={node} />
@@ -52,7 +57,7 @@ class App extends React.Component {
   }
 }
 
-export default Relay.createContainer(App, {
+export default createContainer(App, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on User {
@@ -61,6 +66,7 @@ export default Relay.createContainer(App, {
         repositories(first: 5, orderBy: {field: NAME, direction: ASC}) {
           edges {
             node {
+              id
               ${Repository.getFragment('repository')}
             }
           }

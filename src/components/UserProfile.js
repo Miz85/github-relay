@@ -22,6 +22,7 @@ class UserProfile extends Component {
 
     return (
       <div style={styles.container}>
+        <span>viewing as:&nbsp;&nbsp;</span>
         <h4>{name}</h4>
         <img src={avatarURL} style={styles.avatar}></img>
       </div>
